@@ -7,15 +7,15 @@ module.exports = function(grunt) {
       options: {
         smarttabs: true
       },
-      all: ['Gruntfile.js', ‘src/DWAPI*.js', ‘src/DWShop*.js']
+      all: ['Gruntfile.js', 'src/DWAPI*.js', 'src/DWShop*.js']
     },
     concat: {
       options: {
         separator: '\n',
       },
       dist: {
-        src: [‘src/DWAPI*.js', ‘src/DWShop*.js'],
-        dest: ‘build/dw-ocapi-api.js',
+        src: ['src/DWAPI*.js', 'src/DWShop*.js'],
+        dest: 'build/dw-ocapi-api.js',
       }
     },
     uglify: {
@@ -23,8 +23,8 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: ‘build/dw-ocapi-api.js',
-        dest: ‘build/dw-ocapi-api.min.js'
+        src: 'build/dw-ocapi-api.js',
+        dest: 'build/dw-ocapi-api.min.js'
       }
     },
   });

@@ -1,8 +1,8 @@
 {
-  "name": “js-SDK-Client”,
+  "name": "js-SDK-Client",
   "version": "0.1.0",
   "description": "Experimental prototype of javascript library for OCAPI (Rest APIs)",
-  "main": “src/DWAPIManager.js”,
+  "main": "src/DWAPIManager.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

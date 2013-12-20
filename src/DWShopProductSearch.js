@@ -20,20 +20,20 @@ DWShopProductSearch.prototype.search = function(subresource, query, start, count
 };
 
 DWShopProductSearch.prototype.sendRequestToServer = function(url) {
-	if (start != null)
+	if (start !== null)
 		url += "&start=" + start;
-	if (count != null)
+	if (count !== null)
 		url += "&count=" + count;
-	if (refine != null)
+	if (refine !== null)
 		url += "&refine=" + refine;
-	if (sort != null)
+	if (sort !== null)
 		url += "&sort=" + sort;
-	if (expand != null)
+	if (expand !== null)
 		url += "&expand=" + expand;
 
 	return this.ajax({
 	  type: "GET",
-      headers: {"x-dw-client-id": clientId},
+          headers: {"x-dw-client-id": clientId},
 	  url: url,
 	  dataType: "json"
 	});	

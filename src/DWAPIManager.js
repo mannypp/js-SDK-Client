@@ -25,12 +25,12 @@ DWAPIManager.prototype.setupHost = function(host, siteName, clientId) {
 
 DWAPIManager.prototype.getBaseURL = function() {
 	return this.baseURL;
-}
+};
 
 DWAPIManager.prototype.getSecureBaseURL = function() {
 	return this.baseURL;
-}
+};
 
 DWAPIManager.prototype.getClientId = function() {
 	return this.clientId;
-}
+};

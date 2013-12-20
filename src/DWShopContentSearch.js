@@ -11,18 +11,18 @@ DWShopContentSearch.prototype.resourceUrl = function() {
 
 DWShopContentSearch.prototype.search = function(query, start, count, refine, sort) {
 	var url = this.getSecureBaseURL() + this.resourceUrl() + "?q=" + query;
-	if (start != null)
+	if (start !== null)
 		url += "&start=" + start;
-	if (count != null)
+	if (count !== null)
 		url += "&count=" + count;
-	if (refine != null)
+	if (refine !== null)
 		url += "&refine=" + refine;
-	if (sort != null)
+	if (sort !== null)
 		url += "&sort=" + sort;
 	
 	return this.ajax({
 	  type: "GET",
-      headers: {"x-dw-client-id": clientId},
+          headers: {"x-dw-client-id": clientId},
 	  url: url,
 	  dataType: "json"
 	});

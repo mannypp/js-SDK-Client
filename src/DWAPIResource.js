@@ -40,7 +40,7 @@ DWAPIResource.prototype.retrieveResource = function() {
 };
 
 DWAPIResource.prototype.findById = function(id, subresource) {
-	if (subresource != null && subresource.trim().length() > 0)
+	if (subresource !== null && subresource.trim().length() > 0)
 		return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithIdAndSubresource(id, subresource));
 	
 	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id));
@@ -62,12 +62,12 @@ DWAPIResource.prototype.findWithUrl = function(url) {
 DWAPIResource.prototype.ajax = function(json) {
 	var promise = DWAPIManager.dw.jquery.ajax(json);
 
-    if (this.errorFunction != null)
-    	promise.fail(this.errorFunction);
+    if (this.errorFunction !== null)
+        promise.fail(this.errorFunction);
     
     return promise;
-}
+};
 
 DWAPIResource.prototype.getSecureBaseURL = function() {
 	return DWAPIManager.getSecureBaseURL();
-}
+};
