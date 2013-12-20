@@ -1,0 +1,23 @@
+{
+  "name": “js-SDK-Client”,
+  "version": "0.1.0",
+  "description": "Experimental prototype of javascript library for OCAPI (Rest APIs)",
+  "main": “src/DWAPIManager.js”,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mannypp/js-SDK-Client.git"
+  },
+  "author": "Manny Parasirakis",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mannypp/js-SDK-Client/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-concat": "~0.3.0"
+  }
+}
