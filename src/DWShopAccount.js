@@ -1,6 +1,10 @@
+var DWShopAccount = (function() {
+
 function DWShopAccount() {
     DWAPIResource.call(this);
 }
+
+var instance = null;
 
 DWShopAccount.prototype = new DWAPIResource();
 DWShopAccount.prototype.constructor = DWShopAccount;
@@ -45,13 +49,7 @@ DWShopAccount.prototype.register = function(credentials, profile) {
 };
 
 DWShopAccount.prototype.getProfile = function() {
-    return this.ajax({
-      type: "GET",
-      contentType: "application/json",
-      headers: {"x-dw-client-id": clientId},
-      url: this.getSecureBaseURL() + this.resourceUrlWithAction("this"),
-      dataType: "json"
-    });
+    return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("this"));
 };
 
 DWShopAccount.prototype.updateProfile = function(updatedProfile) {
@@ -66,11 +64,15 @@ DWShopAccount.prototype.updateProfile = function(updatedProfile) {
 };
 
 DWShopAccount.prototype.getAddresses = function() {
-    return this.ajax({
-      type: "GET",
-      contentType: "application/json",
-      headers: {"x-dw-client-id": clientId},
-      url: this.getSecureBaseURL() + this.resourceUrlWithAction("this/addresses"),
-      dataType: "json"
-    });
+    return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("this/addresses"));
 };
+
+return {
+	getInstance: function() {
+		if (instance === undefined || instance === null)
+			instance = new DWShopAccount();
+		return instance;
+	}
+};
+
+})();

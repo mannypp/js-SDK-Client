@@ -15,7 +15,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: ['src/DWAPI*.js', 'src/DWShop*.js'],
-        dest: 'build/dw-ocapi-api.js',
+        dest: 'build/js-SDK-Client.js',
       }
     },
     uglify: {
@@ -23,8 +23,8 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: 'build/dw-ocapi-api.js',
-        dest: 'build/dw-ocapi-api.min.js'
+        src: 'build/js-SDK-Client.js',
+        dest: 'build/js-SDK-Client.min.js'
       }
     },
   });

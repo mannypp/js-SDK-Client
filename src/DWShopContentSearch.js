@@ -1,6 +1,10 @@
+var DWShopContentSearch = (function() {
+
 function DWShopContentSearch() {
     DWAPIResource.call(this);
 }
+
+var instance = null;
 
 DWShopContentSearch.prototype = new DWAPIResource();
 DWShopContentSearch.prototype.constructor = DWShopContentSearch;
@@ -11,19 +15,25 @@ DWShopContentSearch.prototype.resourceUrl = function() {
 
 DWShopContentSearch.prototype.search = function(query, start, count, refine, sort) {
 	var url = this.getSecureBaseURL() + this.resourceUrl() + "?q=" + query;
-	if (start !== null)
+
+	if (start !== undefined && start !== null)
 		url += "&start=" + start;
-	if (count !== null)
+	if (count !== undefined && count !== null)
 		url += "&count=" + count;
-	if (refine !== null)
+	if (refine !== undefined && refine !== null)
 		url += "&refine=" + refine;
-	if (sort !== null)
+	if (sort !== undefined && sort !== null)
 		url += "&sort=" + sort;
-	
-	return this.ajax({
-	  type: "GET",
-          headers: {"x-dw-client-id": clientId},
-	  url: url,
-	  dataType: "json"
-	});
+
+	return this.findWithUrl(url);	
 };
+
+return {
+	getInstance: function() {
+		if (instance === undefined || instance === null)
+			instance = new DWShopContentSearch();
+		return instance;
+	}
+};
+
+})();

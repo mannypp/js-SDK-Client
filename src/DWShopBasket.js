@@ -1,6 +1,10 @@
+var DWShopBasket = (function() {
+
 function DWShopBasket() {
     DWAPIResource.call(this);
 }
+
+var instance = null;
 
 DWShopBasket.prototype = new DWAPIResource();
 DWShopBasket.prototype.constructor = DWShopBasket;
@@ -17,30 +21,15 @@ DWShopBasket.prototype.getBasket = function() {
 };
 
 DWShopBasket.prototype.checkout = function() {
-	return this.ajax({
-	  type: "GET",
-	  headers: {"x-dw-client-id": clientId},
-	  url: this.getSecureBaseURL() + this.resourceUrlWithAction("checkout"),
-	  dataType: "json"
-	});
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("checkout"));
 };
 
 DWShopBasket.prototype.getShippingMethods = function() {
-	return this.ajax({
-	  type: "GET",
-	  headers: {"x-dw-client-id": clientId},
-	  url: this.getSecureBaseURL() + this.resourceUrlWithAction("checkout/shipping_methods"),
-	  dataType: "json"
-	});
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("checkout/shipping_methods"));
 };
 
 DWShopBasket.prototype.getPaymentMethods = function() {
-	return this.ajax({
-	  type: "GET",
-	  headers: {"x-dw-client-id": clientId},
-	  url: this.getSecureBaseURL() + this.resourceUrlWithAction("checkout/payment_methods"),
-	  dataType: "json"
-	});
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("checkout/payment_methods"));
 };
 
 DWShopBasket.prototype.addToBasket = function(productId, quantity) {
@@ -172,3 +161,13 @@ DWShopBasket.prototype.sendUpdateToServer = function(patchData) {
       dataType: "json"
     });
 };
+
+return {
+	getInstance: function() {
+		if (instance === undefined || instance === null)
+			instance = new DWShopBasket();
+		return instance;
+	}
+};
+
+})();

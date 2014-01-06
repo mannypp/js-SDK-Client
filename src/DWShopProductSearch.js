@@ -1,6 +1,10 @@
+var DWShopProductSearch = (function() {
+
 function DWShopProductSearch() {
     DWAPIResource.call(this);
 }
+
+var instance = null;
 
 DWShopProductSearch.prototype = new DWAPIResource();
 DWShopProductSearch.prototype.constructor = DWShopProductSearch;
@@ -11,31 +15,35 @@ DWShopProductSearch.prototype.resourceUrl = function() {
 
 DWShopProductSearch.prototype.search = function(query, start, count, refine, sort, expand) {
 	var url = this.getSecureBaseURL() + this.resourceUrl() + "?q=" + query;
-	return this.sendRequestToServer(url);
+	return this.sendRequestToServer(url, start, count, refine, sort, expand);
 };
 
-DWShopProductSearch.prototype.search = function(subresource, query, start, count, refine, sort, expand) {
+DWShopProductSearch.prototype.searchWithSubresource = function(query, subresource, start, count, refine, sort, expand) {
 	var url = this.getSecureBaseURL() + this.resourceUrl() + "/" + subresource + "?q=" + query;
-	return this.sendRequestToServer(url);
+	return this.sendRequestToServer(url, start, count, refine, sort, expand);
 };
 
-DWShopProductSearch.prototype.sendRequestToServer = function(url) {
-	if (start !== null)
+DWShopProductSearch.prototype.sendRequestToServer = function(url, start, count, refine, sort, expand) {
+	if (start !== undefined && start !== null)
 		url += "&start=" + start;
-	if (count !== null)
+	if (count !== undefined && count !== null)
 		url += "&count=" + count;
-	if (refine !== null)
+	if (refine !== undefined && refine !== null)
 		url += "&refine=" + refine;
-	if (sort !== null)
+	if (sort !== undefined && sort !== null)
 		url += "&sort=" + sort;
-	if (expand !== null)
+	if (expand !== undefined && expand !== null)
 		url += "&expand=" + expand;
 
-	return this.ajax({
-	  type: "GET",
-          headers: {"x-dw-client-id": clientId},
-	  url: url,
-	  dataType: "json"
-	});	
+	return this.findWithUrl(url);	
 };
 
+return {
+	getInstance: function() {
+		if (instance === undefined || instance === null)
+			instance = new DWShopProductSearch();
+		return instance;
+	}
+};
+
+})();
