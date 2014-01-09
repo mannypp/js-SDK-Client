@@ -14,6 +14,35 @@ DWAPIResource.prototype.registerErrorHandler = function(errorHandler) {
     this.errorFunctions.push(errorHandler);
 };
 
+DWAPIResource.prototype.captureETag = function(promise) {
+	if (promise !== null) {		
+	    promise.done(function(result, status, jqXHR) {
+			var etagHeader = jqXHR.getResponseHeader("ETag");
+			if (etagHeader !== null) {
+				DWAPIManager.getInstance().etag = etagHeader;
+				console.log("ETag: " + etagHeader);
+			}
+		});
+	}
+	
+	return promise;
+};
+
+DWAPIResource.prototype.convertParamsToString = function(urlParams) {
+	var params = "";
+	
+	if (urlParams !== undefined && urlParams !== null) {
+		for (var key in urlParams) {
+			if (urlParams.hasOwnProperty(key)) {
+				params += (params.length === 0 ? "?" : "&");
+				params += key + "=" + urlParams[key];
+			}
+		}		
+	}
+	
+	return params;
+};
+
 DWAPIResource.prototype.resourceUrl = function() {
 	return null;
 };
@@ -41,29 +70,19 @@ DWAPIResource.prototype.resourceUrlWithAction = function(action) {
 };
 
 DWAPIResource.prototype.retrieveResource = function(urlParams) {
-	var params = "";
-	
-	if (urlParams !== undefined && urlParams !== null) {
-		for (var key in urlParams) {
-			if (urlParams.hasOwnProperty(key)) {
-				params += (params.length === 0 ? "?" : "&");
-				params += key + "=" + urlParams[key];
-			}
-		}		
-	}
-
-	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrl() + params);
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrl() + this.convertParamsToString(urlParams));
 };
 
-DWAPIResource.prototype.findById = function(id, subresource) {
+DWAPIResource.prototype.findById = function(id, subresource, urlParams) {
 	if (subresource !== undefined && subresource !== null && subresource.trim().length > 0)
-		return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithIdAndSubresource(id, subresource));
+		return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithIdAndSubresource(id, subresource) +
+				this.convertParamsToString(urlParams));
 	
-	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id));
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) + this.convertParamsToString(urlParams));
 };
 
-DWAPIResource.prototype.findByMultipleIds = function(ids) {
-    return this.findWithUrl(this.getSecureBaseURL() + "/" + this.resourceUrlWithMultipleIds(ids));
+DWAPIResource.prototype.findByMultipleIds = function(ids, urlParams) {
+    return this.findWithUrl(this.getSecureBaseURL() + "/" + this.resourceUrlWithMultipleIds(ids) + this.convertParamsToString(urlParams));
 };
 
 DWAPIResource.prototype.findWithUrl = function(url) {

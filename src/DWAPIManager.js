@@ -15,6 +15,10 @@ DWAPIManager.prototype.secureBaseURL = null;
 DWAPIManager.prototype.dw = null;
 DWAPIManager.prototype.requestTimeout = 10000;
 
+DWAPIManager.prototype.etag = null;
+DWAPIManager.prototype.currentProfile = null;
+DWAPIManager.prototype.currentBasket = null;
+
 DWAPIManager.prototype.setupHost = function(host, siteName, clientId, version) {
 	this.host = host;
 	this.siteName = siteName;
