@@ -85,7 +85,7 @@ DWShopBasket.prototype.removeProduct = function(productId) {
     if (patchData === null)
         return;
     
-    return this.sendUpdateToServer(patchData);
+    return this.sendBasketUpdatesToServer(patchData);
 };
 
 DWShopBasket.prototype.updateQuantity = function(productId, quantity) {
@@ -102,7 +102,7 @@ DWShopBasket.prototype.updateQuantity = function(productId, quantity) {
     if (patchData === null)
         return;
         
-    return this.sendUpdateToServer(patchData);
+    return this.sendBasketUpdatesToServer(patchData);
 };
 
 DWShopBasket.prototype.updateQuantities = function(updates) {
@@ -122,7 +122,80 @@ DWShopBasket.prototype.updateQuantities = function(updates) {
     
     patchData += "]}";
     
-    return this.sendUpdateToServer(patchData);
+    return this.sendBasketUpdatesToServer(patchData);
+};
+
+DWShopBasket.prototype.addCoupon = function(couponCode) {
+	return this.sendBasketUpdatesToServer("{\"coupon_items\": [{\"code\": \"" + couponCode + "\"}]}");	
+};
+
+DWShopBasket.prototype.removeCoupon = function(couponCode) {
+    var patchData = null;
+    var items = DWAPIManager.getInstance().currentBasket.coupon_items;
+    
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].code == couponCode) {
+            patchData = "{\"coupon_items\":[{_delete_at: " + i + "}]}";     
+            break;
+        }
+    }
+    
+    if (patchData === null)
+        return;
+    
+    return this.sendBasketUpdatesToServer(patchData);
+};
+
+DWShopBasket.prototype.updateBundledProductVariantSelection = function(productId, bundledProductId, newProductId) {
+    var patchData = null;
+    var basket = DWAPIManager.getInstance().currentBasket;
+    var items = basket.product_items;
+    
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].product_id == productId) {
+            patchData = "{\"product_items\": [{_at:" + i + ", \"bundled_product_items\": [{_at: ";
+            
+            var bundledItems = items[i].bundled_product_items;
+            for (var j = 0; j < bundledItems.length; j++) {
+                if (bundledItems[j].product_id == bundledProductId) {
+					patchData += j + ", \"product_id\": \"" + newProductId + "\"}]}]}";
+					break;
+                }
+            }
+            break;
+        }
+    }
+    
+    if (patchData === null)
+        return;
+        
+    return this.sendBasketUpdatesToServer(patchData);
+};
+
+DWShopBasket.prototype.updateOptionSelection = function(productId, optionId, newOptionValue) {
+    var patchData = null;
+    var basket = DWAPIManager.getInstance().currentBasket;
+    var items = basket.product_items;
+    
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].product_id == productId) {
+            patchData = "{\"product_items\": [{_at:" + i + ", \"option_items\": [{_at: ";
+            
+            var optionItems = items[i].option_items;
+            for (var j = 0; j < optionItems.length; j++) {
+                if (optionItems[j].option_id == optionId) {
+					patchData += j + ", \"option_value_id\": \"" + newOptionValue + "\"}]}]}";
+					break;
+                }
+            }
+            break;
+        }
+    }
+    
+    if (patchData === null)
+        return;
+        
+    return this.sendBasketUpdatesToServer(patchData);
 };
 
 DWShopBasket.prototype.setCustomerInfo = function(customerInfo) {
@@ -222,7 +295,7 @@ DWShopBasket.prototype.submit = function() {
     return promise;
 };
 
-DWShopBasket.prototype.sendUpdateToServer = function(patchData) {
+DWShopBasket.prototype.sendBasketUpdatesToServer = function(patchData) {
     var promise = this.ajax({
       type: "PATCH",
       contentType: "application/json",
