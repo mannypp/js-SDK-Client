@@ -3,12 +3,14 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     jshint: {
       options: {
         smarttabs: true
       },
       all: ['Gruntfile.js', 'src/DWAPI*.js', 'src/DWShop*.js']
     },
+
     concat: {
       options: {
         separator: '\n',
@@ -18,6 +20,7 @@ module.exports = function(grunt) {
         dest: 'build/js-SDK-Client.js',
       }
     },
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -27,15 +30,25 @@ module.exports = function(grunt) {
         dest: 'build/js-SDK-Client.min.js'
       }
     },
+
+    jsdoc : {
+        dist : {
+            src: ['src/*.js'], 
+            options: {
+                destination: 'doc'
+            }
+        }
+    }
   });
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint','concat','uglify']);
+  grunt.registerTask('default', ['jshint','concat','uglify','jsdoc']);
 
 };
 
