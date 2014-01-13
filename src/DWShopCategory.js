@@ -15,9 +15,9 @@ DWShopCategory.prototype.resourceUrl = function() {
 
 DWShopCategory.prototype.findById = function(id, subresource) {
 	if (subresource !== undefined && subresource !== null && subresource.trim().length > 0)
-		return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithIdAndSubresource(id, subresource) + "?levels=1");
+		return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithIdAndSubresource(id, subresource) + "?" + DWAPIConstants.get("LEVELS") + "=1");
 	
-	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) + "?levels=1");
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) + "?" + DWAPIConstants.get("LEVELS") + "=1");
 };
 
 return {

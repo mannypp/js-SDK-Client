@@ -14,16 +14,16 @@ DWShopContentSearch.prototype.resourceUrl = function() {
 };
 
 DWShopContentSearch.prototype.search = function(query, start, count, refine, sort) {
-	var url = this.getSecureBaseURL() + this.resourceUrl() + "?q=" + query;
+	var url = this.getSecureBaseURL() + this.resourceUrl() + "?" + DWAPIConstants.get("QUERY") + "=" + query;
 
 	if (start !== undefined && start !== null)
-		url += "&start=" + start;
+		url += "&" + DWAPIConstants.get("START") + "=" + start;
 	if (count !== undefined && count !== null)
-		url += "&count=" + count;
+		url += "&" + DWAPIConstants.get("COUNT") + "=" + count;
 	if (refine !== undefined && refine !== null)
-		url += "&refine=" + refine;
+		url += "&" + DWAPIConstants.get("REFINE") + "=" + refine;
 	if (sort !== undefined && sort !== null)
-		url += "&sort=" + sort;
+		url += "&" + DWAPIConstants.get("SORT") + "=" + sort;
 
 	return this.findWithUrl(url);	
 };

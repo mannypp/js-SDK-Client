@@ -52,14 +52,19 @@ DWShopBasket.prototype.getPaymentMethods = function() {
 	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("checkout/payment_methods"));
 };
 
-DWShopBasket.prototype.addProduct = function(productId, quantity) {
+DWShopBasket.prototype.addProduct = function(productId, quantity, inventoryId) {
 	if (quantity === undefined)
 		quantity = 1;
+	
+	var body = "{\"product_id\": \"" + productId + "\", \"quantity\": " + quantity;
+	if (inventoryId !== undefined && inventoryId !== null)
+		body += ", \"inventory_id\": \"" + inventoryId + "\"";
+	body += "}";
 	
 	var promise = this.ajax({
 	  type: "POST",
 	  contentType: "application/json",
-	  data: "{\"product_id\": \"" + productId + "\", \"quantity\": " + quantity + "}",
+	  data: body,
 	  headers: {'If-Match': DWAPIManager.getInstance().etag, 'x-dw-client-id': DWAPIManager.getInstance().clientId},
 	  url: this.getSecureBaseURL() + this.resourceUrlWithAction("add"),
 	  dataType: "json"

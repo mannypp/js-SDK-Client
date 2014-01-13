@@ -14,11 +14,11 @@ DWShopProduct.prototype.resourceUrl = function() {
 };
 
 DWShopProduct.prototype.findByIdWithExpand = function(id, expand) {
-    return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) + (expand === null ? "" : "?expand=" + expand));
+    return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) + (expand === null ? "" : "?" + DWAPIConstants.get("EXPAND") + "=" + expand));
 };
 
 DWShopProduct.prototype.loadProductLink = function(link) {
-	return this.findWithUrl(link + "?expand=images,variations");
+	return this.findWithUrl(link + "?" + DWAPIConstants.get("EXPAND") + "=" + DWAPIConstants.get("IMAGES") + "," + DWAPIConstants.get("VARIATIONS"));
 };
 
 return {

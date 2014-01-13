@@ -14,28 +14,28 @@ DWShopProductSearch.prototype.resourceUrl = function() {
 };
 
 DWShopProductSearch.prototype.search = function(query, start, count, refine, sort, expand) {
-	var url = this.getSecureBaseURL() + this.resourceUrl() + "?q=" + query;
+	var url = this.getSecureBaseURL() + this.resourceUrl() + "?" + DWAPIConstants.get("QUERY") + "=" + query;
 	return this.sendRequestToServer(url, start, count, refine, sort, expand);
 };
 
 DWShopProductSearch.prototype.searchWithSubresource = function(query, subresource, start, count, refine, sort, expand) {
-	var url = this.getSecureBaseURL() + this.resourceUrl() + "/" + subresource + "?q=" + query;
+	var url = this.getSecureBaseURL() + this.resourceUrl() + "/" + subresource + "?" + DWAPIConstants.get("QUERY") + "=" + query;
 	return this.sendRequestToServer(url, start, count, refine, sort, expand);
 };
 
 DWShopProductSearch.prototype.sendRequestToServer = function(url, start, count, refine, sort, expand) {
 	if (start !== undefined && start !== null)
-		url += "&start=" + start;
+		url += "&" + DWAPIConstants.get("START") + "=" + start;
 	if (count !== undefined && count !== null)
-		url += "&count=" + count;
+		url += "&" + DWAPIConstants.get("COUNT") + "=" + count;
 	if (refine !== undefined && refine !== null)
-		url += "&refine=" + refine;
+		url += "&" + DWAPIConstants.get("REFINE") + "=" + refine;
 	if (sort !== undefined && sort !== null)
-		url += "&sort=" + sort;
+		url += "&" + DWAPIConstants.get("SORT") + "=" + sort;
 	if (expand !== undefined && expand !== null)
-		url += "&expand=" + expand;
+		url += "&" + DWAPIConstants.get("EXPAND") + "=" + expand;
 
-	return this.findWithUrl(url);	
+	return this.findWithUrl(url);
 };
 
 return {
