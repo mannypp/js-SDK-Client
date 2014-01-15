@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: DWAPIManager.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: DWAPIManager.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * The DWAPIManager class. This class manages connections to the server. In order to initialize
+ * the manager, make the following call:
+ *
+ * &lt;code>DWAPIManager.getInstance(server-name, site-name, client-id);&lt;/code>
+ *
+ * The above code will initialize the manager using server, site, and client id specified. Note
+ * that you do not need to hold onto a reference to the manager class created. To retrieve the
+ * manager in your code later, just call:
+ *
+ * &lt;code>DWAPIManager.getInstance();&lt;/code>
+ *
+ * @example DWAPIManager.getInstance("www.mysite.com, "MySite", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+ * @class
+ * @author Manny Parasirakis
+ */
+var DWAPIManager = (function() {
+
+/**
+ * @constructor
+ */
+function DWAPIManager() {
+}
+
+var instance = null;
+
+/**
+ * @memberOf DWAPIManager
+ * @property {string} version the api version to use in all requests
+ */
+DWAPIManager.prototype.version = "13_6";
+/**
+ * @memberOf DWAPIManager
+ * @property {string} host the hostname to use in all requests
+ */
+DWAPIManager.prototype.host = null;
+/**
+ * @memberOf DWAPIManager
+ * @property {string} siteName the site name to use in all requests
+ */
+DWAPIManager.prototype.siteName = null;
+/**
+ * @memberOf DWAPIManager
+ * @property {string} clientId the client id to use in all requests
+ */
+DWAPIManager.prototype.clientId = null;
+
+DWAPIManager.prototype.baseURL = null;
+DWAPIManager.prototype.secureBaseURL = null;
+
+DWAPIManager.prototype.dw = null;
+DWAPIManager.prototype.requestTimeout = 10000;
+
+DWAPIManager.prototype.etag = null;
+DWAPIManager.prototype.currentProfile = null;
+DWAPIManager.prototype.currentBasket = null;
+
+/**
+ * Initializes a DWAPIManager with the given information.
+ *
+ * @private
+ * @memberOf DWAPIManager
+ * @param host the name of the host to make requests to
+ * @param siteName the name of the site to make requests to
+ * @param clientId the required client id
+ * @param version the api version to use
+ */
+DWAPIManager.prototype.setupHost = function(host, siteName, clientId, version) {
+	this.host = host;
+	this.siteName = siteName;
+	if (version !== undefined)
+		this.version = version;
+	this.clientId = clientId;
+
+	// setup URLs
+	this.baseURL = "http://" + this.host + "/s/" + this.siteName + "/dw/shop/v" + this.version + "/";
+	this.secureBaseURL = "https://" + this.host + "/s/" + this.siteName + "/dw/shop/v" + this.version + "/";
+
+	// setup singleton
+	this.instance = this;
+
+	// setup jquery
+	this.dw = {"jquery": $.noConflict(true)};
+};
+
+/**
+ * Returns the base URL string
+ *
+ * @memberOf DWAPIManager
+ * @returns {string} the base URL string
+ */
+DWAPIManager.prototype.getBaseURL = function() {
+	return this.baseURL;
+};
+
+/**
+ * Returns the secure base URL string
+ *
+ * @memberOf DWAPIManager
+ * @returns {string} the secure base URL string
+ */
+DWAPIManager.prototype.getSecureBaseURL = function() {
+	return this.secureBaseURL;
+};
+
+/**
+ * Returns the client id this DWAPIManager was initialized with
+ *
+ * @memberOf DWAPIManager
+ * @returns {string} the client id this DWAPIManager was initialized with
+ */
+DWAPIManager.prototype.getClientId = function() {
+	return this.clientId;
+};
+
+/**
+ * Returns the configured request timeout
+ *
+ * @memberOf DWAPIManager
+ * @returns {number} the configured request timeout. Default is 10000ms.
+ */
+DWAPIManager.prototype.getRequestTimeout = function() {
+	return this.requestTimeout;
+};
+
+/**
+ * Sets the request timeout for all requests
+ *
+ * @memberOf DWAPIManager
+ * @param {number} timeout the request timeout to set
+ */
+DWAPIManager.prototype.setRequestTimeout = function(timeout) {
+	this.requestTimeout = timout;
+};
+
+return {
+	/**
+	 * This method returns an instance of a DWAPIManager.
+	 *
+	 * @name DWAPIManager.getInstance()
+	 * @param host the name of the host
+	 * @param siteName the name of the site
+	 * @param clientId the client id
+	 * @param version the version of the api to use
+	 * @returns an instance of DWAPIManager
+	 */
+	getInstance: function (host, siteName, clientId, version) {
+        if (instance === undefined || instance === null) {
+            instance = new DWAPIManager();
+            instance.setupHost(host, siteName, clientId, version);
+		}
+
+        return instance;
+    }
+};
+})();
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="DWAPIConstants.html">DWAPIConstants</a></li><li><a href="DWAPIManager.html">DWAPIManager</a></li><li><a href="DWAPIResource.html">DWAPIResource</a></li><li><a href="DWShopAccount.html">DWShopAccount</a></li><li><a href="DWShopBasket.html">DWShopBasket</a></li><li><a href="DWShopCategory.html">DWShopCategory</a></li><li><a href="DWShopContent.html">DWShopContent</a></li><li><a href="DWShopContentSearch.html">DWShopContentSearch</a></li><li><a href="DWShopFolder.html">DWShopFolder</a></li><li><a href="DWShopProduct.html">DWShopProduct</a></li><li><a href="DWShopProductSearch.html">DWShopProductSearch</a></li><li><a href="DWShopPromotion.html">DWShopPromotion</a></li><li><a href="DWShopSite.html">DWShopSite</a></li><li><a href="DWShopStore.html">DWShopStore</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jan 14 2014 16:39:55 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

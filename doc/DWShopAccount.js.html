@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: DWShopAccount.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: DWShopAccount.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * This class is used for retrieving account resources.
+ *
+ * @class
+ * @extends DWAPIResource
+ * @author Manny Parasirakis
+ */
+var DWShopAccount = (function() {
+
+/**
+ * @constructor
+ */
+function DWShopAccount() {
+    DWAPIResource.call(this);
+}
+
+var instance = null;
+
+DWShopAccount.prototype = new DWAPIResource();
+DWShopAccount.prototype.constructor = DWShopAccount;
+
+/**
+ * This method allows for the profile response object to be retrieved and stored into the DWAPIManager
+ * instance.
+ *
+ * @memberOf DWShopAccount
+ * @param promise {object} the jquery promise object to register the callback to
+ * @returns the given promise object in order to chain calls
+ */
+DWShopAccount.prototype.captureProfile = function(promise) {
+	if (promise !== null) {
+	    promise.done(function(result, status, jqXHR) {
+			if (result !== undefined && result !== null) {
+				DWAPIManager.getInstance().currentProfile = result;
+				console.log(JSON.stringify(result));
+			}
+		});
+	}
+
+	return promise;
+};
+
+/**
+ * Override the base class implementation of this method to return the account resource identifier.
+ *
+ * @memberOf DWShopAccount
+ * @returns the resource identifier for account
+ */
+DWShopAccount.prototype.resourceUrl = function(id) {
+    return "account";
+};
+
+/**
+ * Logs a user into the server.
+ *
+ * @memberOf DWShopAccount
+ * @param username {string} the username to login with
+ * @param password {string} the password to login with
+ * @returns a jquery promise object
+ */
+DWShopAccount.prototype.login = function(username, password) {
+    var promise = this.ajax({
+      type: "POST",
+      contentType: "application/json",
+      data: "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}",
+      headers: {'x-dw-client-id': DWAPIManager.getInstance().clientId},
+      url: this.getSecureBaseURL() + this.resourceUrlWithAction("login"),
+      dataType: "json"
+    });
+
+    this.captureETag(promise);
+    this.captureProfile(promise);
+
+    return promise;
+};
+
+/**
+ * Logs a user out of the server.
+ *
+ * @memberOf DWShopAccount
+ * @returns a jquery promise object
+ */
+DWShopAccount.prototype.logout = function() {
+    var promise = this.ajax({
+      type: "POST",
+      contentType: "application/json",
+      headers: {'x-dw-client-id': DWAPIManager.getInstance().clientId},
+      url: this.getSecureBaseURL() + this.resourceUrlWithAction("logout"),
+      dataType: "json"
+    });
+
+    promise.done(function(result, status, jqXHR) {
+		var apiManager = DWAPIManager.getInstance();
+		apiManager.etag = null;
+		apiManager.currentProfile = null;
+    });
+
+    return promise;
+};
+
+/**
+ * Registers a new user on the server.
+ *
+ * @example A credential object: {"username": "aname", "password": "apassword"}
+ * A profile object: {
+ *     "address1":"10 Somewhere St.",
+ *     "address2":"",
+ *     "address_id":"8461948625703718"
+ *     "address_name":"",
+ *     "city":"Boston",
+ *     "company_name":"",
+ *     "country_code":"",
+ *     "first_name":"Egon",
+ *     "full_name":"Egon Krenz",
+ *     "job_title":"",
+ *     "last_name":"Krenz",
+ *     "phone":"",
+ *     "postal_code":"",
+ *     "post_box":"",
+ *     "preferred":true,
+ *     "salutation":"",
+ *     "second_name":"",
+ *     "state_code":"",
+ *     "suffix":"",
+ *     "suite":"",
+ *     "title":""
+ *   }
+ * @memberOf DWShopAccount
+ * @param credentials {object} a credentials object which contains a username and password property
+ * @param profile {object} a profile object which contains the properties of a user profile
+ * @returns a jquery promise object
+ */
+DWShopAccount.prototype.register = function(credentials, profile) {
+    var promise = this.ajax({
+      type: "POST",
+      contentType: "application/json",
+      data: "{\"credentials\": " + JSON.stringify(credentials) + ", \"profile\": " + JSON.stringify(profile) + "}",
+      headers: {'x-dw-client-id': DWAPIManager.getInstance().clientId},
+      url: this.getSecureBaseURL() + this.resourceUrlWithAction("register"),
+      dataType: "json"
+    });
+
+    this.captureETag(promise);
+    this.captureProfile(promise);
+
+    return promise;
+};
+
+/**
+ * Returns the current user's profile.
+ *
+ * @memberOf DWShopAccount
+ * @returns a jquery promise object
+ */
+DWShopAccount.prototype.getProfile = function() {
+    var promise = this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("this"));
+
+    this.captureETag(promise);
+    this.captureProfile(promise);
+
+    return promise;
+};
+
+/**
+ * Updates the current user's profile.
+ *
+ * @example {
+ *     "_delete":["fax","phone_mobile"],         // delete values of properties "fax" and "phone_mobile"
+ *     "birthday":"2011-05-06",                  // update "birthday"
+ *     "email":"someone@example.com"             // update "email"
+ *   }
+ * @memberOf DWShopAccount
+ * @param updatedProfile {object} an object which contains the properties to be updated in the user profile
+ * @returns a jquery promise object
+ */
+DWShopAccount.prototype.updateProfile = function(updatedProfile) {
+	var apiManager = DWAPIManager.getInstance();
+    var promise = this.ajax({
+      type: "PATCH",
+      contentType: "application/json",
+      headers: {'If-Match': apiManager.etag, 'x-dw-client-id': apiManager.clientId},
+      url: this.getSecureBaseURL() + this.resourceUrlWithAction("this"),
+      data: JSON.stringify(updatedProfile),
+      dataType: "json"
+    });
+
+    this.captureETag(promise);
+    this.captureProfile(promise);
+
+    return promise;
+};
+
+/**
+ * Returns the addresses stored in the user's profile.
+ *
+ * @memberOf DWShopAccount
+ * @returns a jquery promise object
+ */
+DWShopAccount.prototype.getAddresses = function() {
+    return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithAction("this/addresses"));
+};
+
+return {
+    /**
+     * This method creates and/or returns an instance of DWShopAccount.
+     *
+     * @name DWShopAccount.getInstance()
+     * @returns an instance of DWShopAccount
+     */
+	getInstance: function() {
+		if (instance === undefined || instance === null)
+			instance = new DWShopAccount();
+		return instance;
+	}
+};
+
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="DWAPIConstants.html">DWAPIConstants</a></li><li><a href="DWAPIManager.html">DWAPIManager</a></li><li><a href="DWAPIResource.html">DWAPIResource</a></li><li><a href="DWShopAccount.html">DWShopAccount</a></li><li><a href="DWShopBasket.html">DWShopBasket</a></li><li><a href="DWShopCategory.html">DWShopCategory</a></li><li><a href="DWShopContent.html">DWShopContent</a></li><li><a href="DWShopContentSearch.html">DWShopContentSearch</a></li><li><a href="DWShopFolder.html">DWShopFolder</a></li><li><a href="DWShopProduct.html">DWShopProduct</a></li><li><a href="DWShopProductSearch.html">DWShopProductSearch</a></li><li><a href="DWShopPromotion.html">DWShopPromotion</a></li><li><a href="DWShopSite.html">DWShopSite</a></li><li><a href="DWShopStore.html">DWShopStore</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jan 14 2014 16:39:55 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
