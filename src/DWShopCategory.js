@@ -52,8 +52,7 @@ DWShopCategory.prototype.findById = function(id, subresource, urlParams) {
 		return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithIdAndSubresource(id, subresource) + "?" +
 				this.convertParamsToString(urlParams));
 
-	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) +
-	        "?" + this.convertParamsToString(urlParams));
+	return this.findWithUrl(this.getSecureBaseURL() + this.resourceUrlWithId(id) + this.convertParamsToString(urlParams));
 };
 
 return {
